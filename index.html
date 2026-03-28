@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)https://manuelvs8.github.io/Origen-de-los-materiales/ -->
-<html lang="es" translate="no"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="es" translate="no">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="google" content="notranslate">
-    <title>Origen de los materiales</title>
+    <title>Propiedades específicas de la materia</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/icono.ico">
     <style>
         /* ====== Reset & base ====== */
@@ -76,7 +76,7 @@
         .mute-btn:hover{ transform: scale(1.1); }
         .mute-btn svg { width: 20px; height: 20px; fill: white; }
 
-        /* --- Pantalla Resumen --- */
+        /* --- Pantalla Resumen Teoría --- */
         .theory-content { 
             padding: 10px; 
             margin: 10px 0; 
@@ -98,311 +98,121 @@
             margin-bottom: 10px;
             font-size: 1rem;
         }
-        .change-block {
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            flex: 1;
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
         }
-        .change-block.natural {
-            background: #e6f2ff;
-            border: 2px solid var(--blue-600);
+        .theory-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--blue-700);
+            transition: transform 0.2s;
         }
-        .change-block.artificial {
-            background: #fff3e0;
-            border: 2px solid var(--orange);
+        .theory-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
-        .block-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 8px;
+        .theory-card h3 {
+            color: var(--blue-dark);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-        .natural .block-title { color: var(--blue-700); }
-        .artificial .block-title { color: var(--orange-700); }
-        
-        .block-desc {
+        .theory-card h3 span {
+            color: var(--orange);
+            font-weight: 900;
+        }
+        .theory-card p {
             font-size: 0.95rem;
-            margin-bottom: 10px;
             color: #444;
         }
-        .sub-block {
-            margin-left: 15px;
-            margin-bottom: 8px;
-        }
-        .sub-block-title {
-            font-weight: 700;
-            color: var(--blue-dark);
-        }
-        .natural .sub-block-title { color: var(--blue-600); }
-        .artificial .sub-block-title { color: var(--orange-700); }
-        .example-text {
-            color: #555;
-            font-size: 0.9rem;
-        }
-        .play-btn-container {
-            text-align: center;
-            margin-top: auto;
-            padding-top: 10px;
+        .theory-card p strong {
+            color: var(--blue-700);
         }
 
-        /* Juego 1: Tarjetas */
-        .cards-container {
+        /* Juego: Emparejar Tarjetas (Grid) */
+        .match-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr 1fr; /* Dos columnas fijas */
+            gap: 20px;
             margin: 20px 0;
-            justify-content: center;
+            flex: 1;
+            align-content: flex-start;
         }
-        @media (max-width: 600px) { 
-            .cards-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .memory-card { font-size: 0.8rem; padding: 10px; }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .memory-card {
-            background-color: #3498db; 
-            color: white;
-            border: 3px solid transparent;
+        .match-card {
+            background-color: #fff;
+            color: var(--blue-700);
+            border: 2px solid var(--blue-600);
             border-radius: 10px;
             padding: 15px;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
             text-align: center;
-            min-height: 100px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            font-weight: bold;
+            font-size: 0.95rem;
+            font-weight: 600;
             user-select: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .memory-card:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .memory-card.selected { background-color: #f1c40f; transform: scale(1.05); color: white; }
-        .memory-card.matched { background-color: #27ae60; color: white; cursor: default; }
-        .memory-card.flash-error { animation: shakeRed 0.3s ease-in-out; }
-        @keyframes shakeRed {
-            0% { background-color: #3498db; transform: translateX(0); }
-            20% { background-color: #e74c3c; transform: translateX(-5px); }
-            40% { transform: translateX(5px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-            100% { background-color: #3498db; transform: translateX(0); }
-        }
-
-        /* Juego 2: Identificar */
-        .game2-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            flex: 1;
-        }
-        
-        .image-display {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: transparent; 
-            min-height: 300px;
-            gap: 15px;
-        }
-        .image-display img {
-            max-width: 100%;
-            height: auto;
-            max-height: 280px;
-            object-fit: contain;
-            border-radius: 8px;
-            transition: transform 0.2s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        .image-display img:hover { transform: scale(1.03); }
-
-        /* Word display area */
-        .word-display-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .material-word {
-            font-size: clamp(2rem, 6vw, 3rem);
-            font-weight: 800;
-            color: var(--blue-dark);
-            letter-spacing: 1px;
-        }
-        .play-word-btn {
-            background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .play-word-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        }
-        .play-word-btn svg {
-            fill: white;
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Contenedor selects en línea */
-        .selectors-container {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            width: 100%;
-            max-width: 500px;
-            justify-content: center;
-            align-items: flex-end;
-            flex-wrap: nowrap;
-        }
-
-        /* Lista desplegable hacia arriba */
-        .custom-select-wrapper {
-            position: relative;
-            user-select: none;
-            width: 100%;
-            flex: 1;
-            z-index: 50;
-            min-width: 0;
-        }
-        .custom-select {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        .custom-select__trigger {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.2rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--blue-700);
-            height: 50px;
-            line-height: 50px;
-            background: #fff;
-            border: 2px solid var(--blue-600);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: border-color 0.2s, color 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .custom-select__trigger:hover {
+        .match-card:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             border-color: var(--orange);
         }
-        .custom-select__trigger.selected-highlight {
-            color: var(--orange);
-            border-color: var(--orange);
-            font-weight: 700;
+        .match-card.selected { 
+            background-color: var(--orange); 
+            border-color: var(--orange-700);
+            transform: scale(1.03);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 66, 0.3);
         }
-        .custom-select__trigger::after {
-            content: '';
-            width: 10px; height: 10px;
-            border-right: 2px solid var(--blue-700);
-            border-bottom: 2px solid var(--blue-700);
-            transform: rotate(45deg);
-            margin-top: -5px;
-            transition: transform 0.2s;
-            flex-shrink: 0;
+        .match-card.matched { 
+            background-color: var(--green); 
+            border-color: #27ae60;
+            color: white; 
+            cursor: default;
+            opacity: 0.9;
         }
-        
-        /* Drop UP */
-        .custom-options {
-            position: absolute;
-            display: block;
-            bottom: 100%; 
-            left: 0;
-            right: 0;
-            background: #fff;
-            border: 2px solid var(--blue-600);
-            border-bottom: 0;
-            border-radius: 10px 10px 0 0;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            z-index: 100;
-            height: auto; 
-            overflow: visible; 
-            transform: translateY(10px);
-            transition: all 0.3s;
-        }
-        
-        .custom-select.open .custom-options {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: all;
-            transform: translateY(0);
-        }
-        
-        .custom-select.open .custom-select__trigger::after {
-             margin-top: 5px; transform: rotate(-135deg);
-        }
-        
-        .custom-option {
-            position: relative;
-            display: block;
-            padding: 0 1.2rem;
-            font-size: 1rem;
-            font-weight: 400;
-            color: var(--blue-700);
-            line-height: 45px;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .custom-option:hover {
-            background-color: #e6f2ff;
-            color: var(--orange);
-        }
-        .custom-option.selected {
-            background-color: var(--panel);
-            color: var(--blue-dark);
-            font-weight: 700;
-        }
-        
-        .custom-select__trigger.correct {
-            border-color: var(--green);
-            background-color: rgba(46, 204, 113, 0.1);
-            color: var(--green);
-        }
-        .custom-select__trigger.wrong {
+        .match-card.flash-error { 
+            animation: shake 0.3s ease-in-out; 
+            background-color: var(--red);
             border-color: var(--red);
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--red);
-            animation: shake 0.3s;
+            color: white;
         }
-        
+
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
         }
 
-        .action-area {
-            height: 50px; 
-            display: flex; 
-            align-items: center;
-            justify-content: center;
-            width: 100%;
+        /* Responsive para match container */
+        @media (max-width: 600px) {
+            .match-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .match-card {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
         }
 
         /* Pantalla Final */
@@ -438,15 +248,6 @@
         
         .confetti{ position:fixed; width:10px; height:10px; border-radius:50%; animation: confetti-fall 3s linear forwards; z-index:999; }
         @keyframes confetti-fall{ 0%{ transform:translate(0, -20px) rotate(0); opacity:1;} 100%{ transform:translate(var(--tx), var(--ty)) rotate(360deg); opacity:0; } }
-
-        /* English section styling */
-        .english-section {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .english-section .highlight-en {
-            color: var(--orange);
-            font-weight: 800;
-        }
     </style>
 </head>
 <body>
@@ -460,24 +261,24 @@
     <!-- Pantalla de Inicio -->
     <section class="screen active" id="startScreen">
         <header>
-            <h1>Origen de los materiales</h1>
-            <div class="subtitle">Llamamos materiales a los distintos tipos de materia. Estúdialos</div>
+            <h1>Propiedades específicas de la materia</h1>
+            <div class="subtitle">Usamos diferentes materiales para construir objetos según sus propiedades específicas. Estúdialas</div>
         </header>
 
         <div class="start-content">
             <div class="advice-box">
-                <span class="advice-text">Los materiales pueden ser de <span class="highlight-keyword">origen natural</span> si lo encontramos en la naturaleza (origen <span class="highlight-keyword">animal</span>, <span class="highlight-keyword">vegetal</span> o <span class="highlight-keyword">mineral</span>) o de <span class="highlight-keyword">origen artificial</span> si lo fabrican las personas a partir de materiales naturales. Aprenderemos a diferenciarlos.</span>
-                <strong style="display:block; margin-top:0.5rem; text-align: center;">¡Ánimo!</strong>
+                <span class="advice-text">En este juego aprenderás a identificar a diferenciar las propiedades específicas de la materia: <span class="highlight-keyword">resistencia</span>, <span class="highlight-keyword">plasticidad</span>, <span class="highlight-keyword">elasticidad</span>, <span class="highlight-keyword">solubilidad</span>, <span class="highlight-keyword">conductividad</span>, <span class="highlight-keyword">comportamiento ante la luz</span> y <span class="highlight-keyword">flotabilidad</span>.
+                <strong style="display:block; margin-top:0.5rem; text-align: center;">¡Ánimo!</strong></span>
             </div>
             
             <button class="btn btn-primary" id="startBtn">Comenzar</button>
             
-            <img class="start-image" src="./Origen de los materiales_files/Niños.png" alt="Kids learning">
+            <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Kids learning">
             
             <div class="hall-of-fame" id="hallOfFame">
-              <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
-              <table class="hall-of-fame-table">
-                  <thead>
+                <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
+                <table class="hall-of-fame-table">
+                    <thead>
                         <tr>
                             <th>Posición</th>
                             <th>Nombre</th>
@@ -485,13 +286,10 @@
                             <th>Tiempo</th>
                         </tr>
                     </thead>
-                    <tbody id="hofTableBody"><tr>
-                                <td>1º</td>
-                                <td>greta la  pro</td>
-                                <td>100</td>
-                                <td>14:26.7</td>
-                            </tr></tbody>
-              </table>
+                    <tbody id="hofTableBody">
+                        <tr><td colspan="4" class="hall-of-fame-loading">Cargando datos...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -499,59 +297,43 @@
     <!-- Pantalla Resumen -->
     <section class="screen" id="summaryScreen">
         <header>
-            <h1>La materia y sus propiedades generales</h1>
+            <h1>La materia y sus propiedades específicas</h1>
         </header>
         <div class="theory-content">
-            <div class="theory-main-title">Origen de los materiales</div>
-            <p class="theory-intro">Llamamos materiales a los distintos tipos de materia. Estos materiales pueden ser de <strong>origen natural</strong> o <strong>artificial</strong>:</p>
+            <div class="theory-intro">Para fabricar objetos, usamos distintos materiales dependiendo de sus propiedades; por ejemplo:</div>
             
-            <div class="change-block natural">
-                <div class="block-title">
-                    Origen natural
+            <div class="theory-grid">
+                <div class="theory-card">
+                    <h3><span>Resistencia</span></h3>
+                    <p>Si es difícil de romper: hormigón, roca, acero…</p>
                 </div>
-                <div class="block-desc">
-                    Los encontramos directamente en la naturaleza. Pueden ser:
+                <div class="theory-card">
+                    <h3><span>Plasticidad</span></h3>
+                    <p>Si al deformarlo, mantiene la forma nueva: plastilina, arcilla…</p>
                 </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen vegetal:</div>
-                    <div class="example-text">madera, algodón, corcho...</div>
+                <div class="theory-card">
+                    <h3><span>Elasticidad</span></h3>
+                    <p>Si al deformarlo, recupera su forma anterior: elástico, goma…</p>
                 </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen animal:</div>
-                    <div class="example-text">lana, cuero, seda...</div>
+                <div class="theory-card">
+                    <h3><span>Solubilidad</span></h3>
+                    <p>Si se disuelve en el agua: azúcar, sal…</p>
                 </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Origen mineral:</div>
-                    <div class="example-text">hierro, granito, oro...</div>
+                <div class="theory-card">
+                    <h3><span>Conductividad</span></h3>
+                    <p>Si deja pasar la electricidad (<strong>conductores</strong>: cobre, hierro...) o si no la deja pasar (<strong>aislantes</strong>: goma, plástico, madera).</p>
                 </div>
-            </div>
-
-            <div class="change-block artificial">
-                <div class="block-title">
-                    Origen artificial
+                <div class="theory-card">
+                    <h3><span>Comportamiento ante la luz</span></h3>
+                    <p>Si deja pasar la luz (<strong>transparente</strong>: cristal), si no deja pasar la luz (<strong>opaco</strong>: madera) o si deja pasar parte de la luz (<strong>traslúcido</strong>: mampara de baño).</p>
                 </div>
-                <div class="block-desc">
-                    Son fabricados por el ser humano a partir de materiales naturales. Algunos ejemplos son:
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Plástico:</div>
-                    <div class="example-text">procedente del petróleo.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Vidrio:</div>
-                    <div class="example-text">se obtiene fundiendo arena.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Bronce:</div>
-                    <div class="example-text">es una aleación de cobre y estaño.</div>
-                </div>
-                <div class="sub-block">
-                    <div class="sub-block-title">Papel:</div>
-                    <div class="example-text">se obtiene a partir de la madera.</div>
+                <div class="theory-card">
+                    <h3><span>Flotabilidad</span></h3>
+                    <p>Si flota en un líquido: madera, corcho…</p>
                 </div>
             </div>
 
-            <div class="play-btn-container">
+            <div class="play-btn-container" style="text-align: center; margin-top: 20px;">
                 <button class="btn btn-primary" id="playBtn">Jugar</button>
             </div>
         </div>
@@ -560,77 +342,49 @@
     <!-- Pantalla Juego 1 -->
     <section class="screen" id="game1Screen">
         <header>
-            <h1>Empareja las tarjetas</h1>
-            <div class="subtitle">Nivel 1/2</div>
+            <h1>Empareja las propiedades específicas con su definición</h1>
+            <div class="subtitle">Nivel 1/3</div>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame1">00:00.0</div>
             <div class="progress-bar"><div class="progress-fill" id="progressFillGame1"></div></div>
-            <div class="timer" style="font-size:0.9rem;">Intentos: <span id="attemptsGame1">0</span></div>
+            <div class="timer" style="font-size:0.9rem; visibility:hidden;">Placeholder</div>
         </div>
-        <div class="cards-container" id="cardsContainerGame1"></div>
+        <div class="match-container" id="game1Container"></div>
     </section>
 
     <!-- Pantalla Juego 2 -->
     <section class="screen" id="game2Screen">
         <header>
-            <h1>Identifica los cambios</h1>
-            <div class="subtitle">Nivel 2/2</div>
+            <h1>Empareja las propiedades específicas con los ejemplos</h1>
+            <div class="subtitle">Nivel 2/3</div>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame2">00:00.0</div>
             <div class="progress-bar"><div class="progress-fill" id="progressFillGame2"></div></div>
             <div class="timer" style="font-size:0.9rem; visibility:hidden;">Placeholder</div>
         </div>
+        <div class="match-container" id="game2Container"></div>
+    </section>
 
-        <div class="game2-container english-section" lang="en" translate="no">
-            <h2 style="text-align:center; font-size:1.2rem; color:var(--blue-dark);">Classify these materials: <span class="highlight-en">Natural</span> (animal, plant, mineral) or <span class="highlight-en">Artificial</span></h2>
-            
-            <div class="image-display">
-                <img src="https://manuelvs8.github.io/Origen-de-los-materiales/" alt="Material" id="game2Img" class="notranslate">
-                
-                <div class="word-display-area">
-                    <div class="material-word notranslate" id="materialWord"></div>
-                    <button class="play-word-btn" id="playWordBtn" title="Listen">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="selectors-container">
-                <div class="custom-select-wrapper">
-                    <div class="custom-select" id="selectNatural">
-                        <div class="custom-select__trigger"><span>Natural materials</span></div>
-                        <div class="custom-options">
-                            <span class="custom-option" data-value="Animal">Animal</span>
-                            <span class="custom-option" data-value="Plant">Plant</span>
-                            <span class="custom-option" data-value="Mineral">Mineral</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="custom-select-wrapper">
-                    <div class="custom-select" id="selectArtificial">
-                        <div class="custom-select__trigger"><span>Artificial materials</span></div>
-                        <div class="custom-options" style="display:none;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="action-area">
-                <button class="btn btn-primary" id="checkBtn">Comprobar</button>
-                <button class="btn btn-primary" id="continueBtn" style="display:none;">Continuar</button>
-            </div>
+    <!-- Pantalla Juego 3 -->
+    <section class="screen" id="game3Screen">
+        <header>
+            <h1>Empareja las definiciones de propiedades específicas con sus ejemplos</h1>
+            <div class="subtitle">Nivel 3/3</div>
+        </header>
+        <div class="game-info">
+            <div class="timer" id="timerGame3">00:00.0</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFillGame3"></div></div>
+            <div class="timer" style="font-size:0.9rem; visibility:hidden;">Placeholder</div>
         </div>
+        <div class="match-container" id="game3Container"></div>
     </section>
 
     <!-- Pantalla Final -->
     <section class="screen" id="finalScreen">
         <header>
-            <h1 class="final-title">Origen de los materiales</h1>
+            <h1 class="final-title">Propiedades específicas de la materia</h1>
         </header>
         <div class="results">
             <div id="trophyBox">🏆</div>
@@ -641,7 +395,7 @@
             <div id="finalMsg" class="subtitle"></div>
             <button class="btn btn-primary" id="backToMenuBtn" style="background:var(--orange);">Volver al menú</button>
             <span class="credit">Creado por Manuel J. Ventura</span>
-            <img class="school-logo" src="./Origen de los materiales_files/Siurot.png" alt="School logo">
+            <img class="school-logo" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Siurot.png" alt="School logo">
         </div>
     </section>
 </div>
@@ -662,9 +416,9 @@
 
 <script>
     /* --- 1. CONFIGURACIÓN DE VARIABLES GLOBALES (CRÍTICO) --- */
-    const SHEET_NAME = "Origen";
+    const SHEET_NAME = "Propiedades";
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXaTeZczyTg43AjfomeGov1WvmndAxl30YQkuNCk_2kDbQegsO4amWubjl5DBa0QNDgw/exec";
-    const MIN_INTERACTIONS = 20; // 7 parejas + 13 imágenes
+    const MIN_INTERACTIONS = 21; 
     
     let soundEnabled = true;
     let audioUnlocked = false;
@@ -703,7 +457,6 @@
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
-            // Create silent buffer to unlock audio
             const buffer = audioContext.createBuffer(1, 1, 22050);
             const source = audioContext.createBufferSource();
             source.buffer = buffer;
@@ -714,80 +467,6 @@
         } catch(e) { 
             audioUnlocked = true; 
         }
-    }
-
-    function forceInitTTS() {
-        return new Promise((resolve) => {
-            let voices = window.speechSynthesis.getVoices();
-            if (voices.length > 0) {
-                resolve();
-                return;
-            }
-            // Force initialization with empty utterance
-            const utterance = new SpeechSynthesisUtterance('');
-            utterance.volume = 0;
-            window.speechSynthesis.speak(utterance);
-            
-            let attempts = 0;
-            const checkVoices = setInterval(() => {
-                voices = window.speechSynthesis.getVoices();
-                attempts++;
-                if (voices.length > 0 || attempts > 20) {
-                    clearInterval(checkVoices);
-                    resolve();
-                }
-            }, 100);
-        });
-    }
-
-    function getBestVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        let bestVoice = null;
-        
-        // Priority 1: Google UK English
-        for (let voice of voices) {
-            if (voice.name === 'Google UK English') {
-                bestVoice = voice;
-                break;
-            }
-        }
-        
-        // Priority 2: Microsoft or Natural en-GB
-        if (!bestVoice) {
-            for (let voice of voices) {
-                if (voice.lang === 'en-GB' && (voice.name.includes('Microsoft') || voice.name.includes('Natural'))) {
-                    bestVoice = voice;
-                    break;
-                }
-            }
-        }
-        
-        // Priority 3: Any en-GB
-        if (!bestVoice) {
-            for (let voice of voices) {
-                if (voice.lang === 'en-GB') {
-                    bestVoice = voice;
-                    break;
-                }
-            }
-        }
-        
-        return bestVoice;
-    }
-
-    function speakText(text) {
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voice = getBestVoice();
-        if (voice) {
-            utterance.voice = voice;
-        }
-        utterance.lang = 'en-GB';
-        utterance.rate = 0.85;
-        utterance.pitch = 1;
-        
-        window.speechSynthesis.speak(utterance);
     }
 
     function playSound(type) {
@@ -830,6 +509,7 @@
             elapsed = delta;
             updateTimerDisplay('timerGame1', elapsed);
             updateTimerDisplay('timerGame2', elapsed);
+            updateTimerDisplay('timerGame3', elapsed);
         }, 100);
     }
 
@@ -853,9 +533,7 @@
     }
 
     /* --- FLUJO PRINCIPAL --- */
-    document.getElementById('startBtn').onclick = async () => { 
-        unlockAudioContext();
-        await forceInitTTS();
+    document.getElementById('startBtn').onclick = () => { 
         playSound('tap'); 
         showScreen('summaryScreen'); 
     };
@@ -867,276 +545,166 @@
         initGame1();
     };
 
-    /* --- JUEGO 1: EMPAREJAR --- */
-    let selectedCards = [];
-    let matchesFound = 0;
-    let attemptsGame1 = 0;
-    const totalPairs1 = 7;
-
+    /* --- LÓGICA DE JUEGOS DE EMPAREJAMIENTO (GENÉRICA) --- */
+    
+    // Data Juego 1: Propiedad - Definición
     const game1Data = [
-        { id: 1, term: 'Materiales de origen natural', def: 'Los encontramos en la naturaleza', pairId: 'nat' },
-        { id: 2, term: 'Materiales de origen artificial', def: 'Son fabricados por las personas', pairId: 'art' },
-        { id: 3, term: 'Natural - animal', def: 'Lana, cuero, seda…', pairId: 'animal' },
-        { id: 4, term: 'Natural - vegetal', def: 'Algodón, madera, corcho…', pairId: 'vegetal' },
-        { id: 5, term: 'Natural - mineral', def: 'Hierro, granito, cobre…', pairId: 'mineral' },
-        { id: 6, term: 'Plástico', def: 'Material artificial que obtenemos del petróleo', pairId: 'plastico' },
-        { id: 7, term: 'Bronce', def: 'Material artificial procedente de fundir cobre y estaño', pairId: 'bronce' }
+        { id: 1, term: 'Resistencia', def: 'Es difícil de romper' },
+        { id: 2, term: 'Elasticidad', def: 'Al deformarlo, recupera su forma' },
+        { id: 3, term: 'Plasticidad', def: 'Al deformarlo, no recupera su forma' },
+        { id: 4, term: 'Conductividad', def: 'Deja pasar la corriente (conductores) o no (aislantes)' },
+        { id: 5, term: 'Solubilidad', def: 'Se disuelve en el agua' },
+        { id: 6, term: 'Comportamiento ante la luz', def: 'Puede ser transparente, opaco o traslúcido' },
+        { id: 7, term: 'Flotabilidad', def: 'Flota sobre un líquido' }
     ];
 
+    // Data Juego 2: Propiedad - Ejemplo
+    const game2Data = [
+        { id: 1, term: 'Resistencia', def: 'Roca, hormigón…' },
+        { id: 2, term: 'Elasticidad', def: 'Elástico, goma…' },
+        { id: 3, term: 'Plasticidad', def: 'Plastilina, arcilla…' },
+        { id: 4, term: 'Conductividad', def: 'Conductores (cobre, hierro…), aislantes (goma, madera...)' },
+        { id: 5, term: 'Solubilidad', def: 'Azúcar o sal en agua' },
+        { id: 6, term: 'Comportamiento ante la luz', def: 'Transparente (lupa), opaco (ladrillo), traslúcido (bolsa se plástico)' },
+        { id: 7, term: 'Flotabilidad', def: 'Madera, corcho…' }
+    ];
+
+    // Data Juego 3: Definición - Ejemplo
+    const game3Data = [
+        { id: 1, term: 'Es difícil de romper', def: 'Roca, hormigón…' },
+        { id: 2, term: 'Al deformarlo, recupera su forma', def: 'Elástico, goma…' },
+        { id: 3, term: 'Al deformarlo, no recupera su forma', def: 'Plastilina, arcilla…' },
+        { id: 4, term: 'Deja pasar la corriente o no', def: 'Conductores (cobre, hierro…), aislantes (goma, madera...)' },
+        { id: 5, term: 'Se disuelve en el agua', def: 'Azúcar o sal en agua' },
+        { id: 6, term: 'Deja pasar la luz o no', def: 'Transparente (lupa), opaco (ladrillo), traslúcido (bolsa se plástico)' },
+        { id: 7, term: 'Flota sobre un líquido', def: 'Madera, corcho…' }
+    ];
+
+    function initGame(containerId, data, nextScreenInitFunc, progressId, totalPairs) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        // Create columns
+        const col1 = document.createElement('div');
+        col1.className = 'column';
+        const col2 = document.createElement('div');
+        col2.className = 'column';
+
+        // Prepare cards
+        let terms = data.map(d => ({ text: d.term, pairId: d.id, type: 'term' }));
+        let defs = data.map(d => ({ text: d.def, pairId: d.id, type: 'def' }));
+
+        // Shuffle independently
+        terms.sort(() => Math.random() - 0.5);
+        defs.sort(() => Math.random() - 0.5);
+
+        // Render Term Column
+        terms.forEach(item => {
+            const card = createCard(item, 'term');
+            col1.appendChild(card);
+        });
+
+        // Render Def Column
+        defs.forEach(item => {
+            const card = createCard(item, 'def');
+            col2.appendChild(card);
+        });
+
+        container.appendChild(col1);
+        container.appendChild(col2);
+
+        // Game State
+        let selectedCard = null;
+        let matches = 0;
+        updateProgress(progressId, 0);
+
+        // Click Handler
+        container.onclick = (e) => {
+            const target = e.target.closest('.match-card');
+            if (!target || target.classList.contains('matched')) return;
+
+            // First click
+            if (!selectedCard) {
+                selectedCard = target;
+                selectedCard.classList.add('selected');
+                playSound('tap');
+            } 
+            // Second click
+            else {
+                if (target === selectedCard) return; // Clicking same card
+
+                totalAttempts++;
+                const id1 = selectedCard.dataset.pairId;
+                const id2 = target.dataset.pairId;
+
+                // Check Match
+                if (id1 === id2) {
+                    playSound('correct');
+                    selectedCard.classList.remove('selected');
+                    selectedCard.classList.add('matched');
+                    target.classList.add('matched');
+                    matches++;
+                    updateProgress(progressId, (matches / totalPairs) * 100);
+                    selectedCard = null;
+
+                    // Finish Condition
+                    if (matches === totalPairs) {
+                        setTimeout(nextScreenInitFunc, 600);
+                    }
+                } else {
+                    playSound('error');
+                    selectedCard.classList.remove('selected');
+                    selectedCard.classList.add('flash-error');
+                    target.classList.add('flash-error');
+
+                    setTimeout(() => {
+                        selectedCard.classList.remove('flash-error');
+                        target.classList.remove('flash-error');
+                        selectedCard = null;
+                    }, 300);
+                }
+            }
+        };
+    }
+
+    function createCard(data, type) {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.textContent = data.text;
+        card.dataset.pairId = data.pairId;
+        card.dataset.type = type;
+        return card;
+    }
+
+    function updateProgress(id, pct) {
+        document.getElementById(id).style.width = pct + '%';
+    }
+
+    /* --- NAVEGACIÓN DE JUEGOS --- */
     function initGame1() {
         showScreen('game1Screen');
-        attemptsGame1 = 0;
-        matchesFound = 0;
-        selectedCards = [];
-        document.getElementById('attemptsGame1').textContent = '0';
-        updateProgress('progressFillGame1', 0);
-        
-        const container = document.getElementById('cardsContainerGame1');
-        container.innerHTML = '';
-        
-        let cards = [];
-        game1Data.forEach(p => { cards.push({text: p.term, pairId: p.pairId, type: 'term'}); cards.push({text: p.def, pairId: p.pairId, type: 'def'}); });
-        cards.sort(() => Math.random() - 0.5);
-
-        cards.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'memory-card';
-            card.textContent = item.text;
-            card.dataset.pairId = item.pairId;
-            card.dataset.text = item.text;
-            card.onclick = () => selectCard(card);
-            container.appendChild(card);
-        });
+        initGame('game1Container', game1Data, initGame2, 'progressFillGame1', 7);
     }
-
-    function selectCard(card) {
-        if (card.classList.contains('matched') || selectedCards.length >= 2 || selectedCards.includes(card)) return;
-        
-        if (selectedCards.length === 0) playSound('tap');
-        
-        card.classList.add('selected');
-        selectedCards.push(card);
-
-        if (selectedCards.length === 2) {
-            attemptsGame1++;
-            totalAttempts++;
-            document.getElementById('attemptsGame1').textContent = attemptsGame1;
-
-            const c1 = selectedCards[0];
-            const c2 = selectedCards[1];
-            
-            const id1 = c1.dataset.pairId;
-            const id2 = c2.dataset.pairId;
-
-            if (id1 === id2) {
-                playSound('correct');
-                c1.classList.remove('selected'); c2.classList.remove('selected');
-                c1.classList.add('matched'); c2.classList.add('matched');
-                matchesFound++;
-                updateProgress('progressFillGame1', (matchesFound / totalPairs1) * 100);
-                selectedCards = [];
-                if (matchesFound === totalPairs1) {
-                    setTimeout(() => { initGame2(); }, 800);
-                }
-            } else {
-                playSound('error');
-                c1.classList.add('flash-error'); c2.classList.add('flash-error');
-                
-                setTimeout(() => {
-                    c1.classList.remove('selected', 'flash-error');
-                    c2.classList.remove('selected', 'flash-error');
-                    selectedCards = [];
-                }, 300);
-            }
-        }
-    }
-
-    /* --- JUEGO 2: IDENTIFICAR --- */
-    const game2Data = [
-        // Natural - Animal
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Lana.png', word: 'Wool' },
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Cuero.png', word: 'Leather' },
-        { type: 'Animal', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Seda.png', word: 'Silk' },
-        // Natural - Plant
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Algodon.png', word: 'Cotton' },
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Madera.png', word: 'Wood' },
-        { type: 'Plant', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Corcho.png', word: 'Cork' },
-        // Natural - Mineral
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Hierro.png', word: 'Iron' },
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Granito.png', word: 'Granite' },
-        { type: 'Mineral', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Oro.png', word: 'Gold' },
-        // Artificial
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Plastico.png', word: 'Plastic' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Papel.png', word: 'Paper' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/VIdrio.png', word: 'Glass' },
-        { type: 'Artificial', img: 'https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/C_MEDIO3/Materiales/Bronce.png', word: 'Bronze' }
-    ];
-    
-    let game2Items = [];
-    let currentIndex2 = 0;
-    let currentSelection = null;
-    const totalItems2 = 13;
-    
-    const selectNatural = document.getElementById('selectNatural');
-    const selectArtificial = document.getElementById('selectArtificial');
-    const triggerNatural = selectNatural.querySelector('.custom-select__trigger');
-    const triggerArtificial = selectArtificial.querySelector('.custom-select__trigger');
-    
-    const game2Img = document.getElementById('game2Img');
-    const materialWord = document.getElementById('materialWord');
-    const playWordBtn = document.getElementById('playWordBtn');
-    const checkBtn = document.getElementById('checkBtn');
-    const continueBtn = document.getElementById('continueBtn');
-
-    // Play word button
-    playWordBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const word = materialWord.textContent;
-        if (word) {
-            speakText(word);
-        }
-    });
-
-    // Dropdown Logic for Natural
-    triggerNatural.addEventListener('click', () => {
-        selectNatural.classList.toggle('open');
-        playSound('tap');
-    });
-    
-    // Logic for Artificial (no dropdown, just selection)
-    triggerArtificial.addEventListener('click', () => {
-        window.speechSynthesis.cancel();
-        playSound('tap');
-        
-        // Reset validation colors
-        triggerNatural.classList.remove('correct', 'wrong');
-        triggerArtificial.classList.remove('correct', 'wrong');
-        
-        // Reset highlights
-        triggerNatural.classList.remove('selected-highlight');
-        triggerArtificial.classList.add('selected-highlight');
-        
-        currentSelection = 'Artificial';
-        selectArtificial.classList.add('selected');
-        selectNatural.classList.remove('selected');
-        triggerNatural.innerHTML = '<span>Natural materials</span>';
-    });
-
-    window.addEventListener('click', function(e) {
-        if (!selectNatural.contains(e.target)) selectNatural.classList.remove('open');
-    });
-
-    // Options Logic for Natural
-    selectNatural.querySelectorAll('.custom-option').forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.stopPropagation();
-            window.speechSynthesis.cancel();
-            playSound('tap');
-            
-            selectNatural.classList.remove('open');
-            
-            // Reset highlights
-            triggerNatural.classList.add('selected-highlight');
-            triggerArtificial.classList.remove('selected-highlight');
-            
-            triggerNatural.innerHTML = this.textContent;
-            selectNatural.classList.add('selected');
-            selectArtificial.classList.remove('selected');
-            triggerArtificial.innerHTML = '<span>Artificial materials</span>';
-            
-            // Reset validation colors
-            triggerNatural.classList.remove('correct', 'wrong');
-            triggerArtificial.classList.remove('correct', 'wrong');
-            
-            currentSelection = this.getAttribute('data-value');
-        });
-    });
-
-    checkBtn.addEventListener('click', checkAnswerGame2);
-    continueBtn.addEventListener('click', nextLevelGame2);
 
     function initGame2() {
         showScreen('game2Screen');
-        currentIndex2 = 0;
-        updateProgress('progressFillGame2', 0);
-        game2Items = shuffle([...game2Data]);
-        loadQuestionGame2();
+        initGame('game2Container', game2Data, initGame3, 'progressFillGame2', 7);
     }
 
-    function loadQuestionGame2() {
-        const item = game2Items[currentIndex2];
-        game2Img.src = item.img;
-        materialWord.textContent = item.word;
-        
-        // Reset Selects
-        triggerNatural.innerHTML = '<span>Natural materials</span>';
-        triggerArtificial.innerHTML = '<span>Artificial materials</span>';
-        selectNatural.classList.remove('selected');
-        selectArtificial.classList.remove('selected');
-        triggerNatural.classList.remove('correct', 'wrong', 'selected-highlight');
-        triggerArtificial.classList.remove('correct', 'wrong', 'selected-highlight');
-        
-        currentSelection = null;
-        checkBtn.style.display = 'inline-flex';
-        continueBtn.style.display = 'none';
-        
-        // Speak the word automatically
-        setTimeout(() => {
-            speakText(item.word);
-        }, 300);
-    }
-
-    function checkAnswerGame2() {
-        if (!currentSelection) {
-            return;
-        }
-
-        window.speechSynthesis.cancel();
-        
-        const correctType = game2Items[currentIndex2].type;
-        totalAttempts++;
-
-        if (currentSelection === correctType) {
-            playSound('correct');
-            
-            const correctTrigger = ['Animal', 'Plant', 'Mineral'].includes(currentSelection) 
-                ? triggerNatural : triggerArtificial;
-            correctTrigger.classList.add('correct');
-            
-            setTimeout(() => { nextLevelGame2(); }, 250);
-            
-        } else {
-            playSound('error');
-            
-            const wrongTrigger = ['Animal', 'Plant', 'Mineral'].includes(currentSelection) 
-                ? triggerNatural : triggerArtificial;
-            wrongTrigger.classList.add('wrong');
-            
-            checkBtn.style.display = 'none';
-            continueBtn.style.display = 'inline-flex';
-        }
-    }
-
-    function nextLevelGame2() {
-        currentIndex2++;
-        updateProgress('progressFillGame2', (currentIndex2 / totalItems2) * 100);
-
-        if (currentIndex2 < totalItems2) {
-            loadQuestionGame2();
-        } else {
-            finishGame();
-        }
+    function initGame3() {
+        showScreen('game3Screen');
+        initGame('game3Container', game3Data, finishGame, 'progressFillGame3', 7);
     }
 
     /* --- FINALIZAR --- */
     function calcularPuntuacionFinal() {
+        // Fórmula: 100 - ((totalAttempts - intentosMinimos) * (100 / intentosMinimos))
         let score = 100 - ((totalAttempts - MIN_INTERACTIONS) * (100 / MIN_INTERACTIONS));
         score = Math.max(0, score);
         return Math.round(score);
     }
 
     function finishGame() {
-        window.speechSynthesis.cancel();
         stopTimer();
         finalTimeVal = elapsed;
         finalScoreVal = calcularPuntuacionFinal();
@@ -1160,20 +728,6 @@
 
         showScreen('finalScreen');
         showSubmitModal(finalTimeVal, finalScoreVal);
-    }
-
-    function updateProgress(id, pct) {
-        document.getElementById(id).style.width = pct + '%';
-    }
-
-    function shuffle(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex != 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
     }
 
     /* --- EFECTOS VISUALES --- */
@@ -1372,6 +926,5 @@
     document.addEventListener('DOMContentLoaded', () => { loadHallOfFame(); });
 
 </script>
-
-
-</body></html>
+</body>
+</html>
