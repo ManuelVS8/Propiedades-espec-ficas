@@ -76,14 +76,14 @@
         .mute-btn:hover{ transform: scale(1.1); }
         .mute-btn svg { width: 20px; height: 20px; fill: white; }
 
-        /* --- Pantalla Resumen Teoría --- */
+        /* --- Pantalla Resumen --- */
         .theory-content { 
             padding: 10px; 
             margin: 10px 0; 
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
         .theory-main-title {
             text-align: center;
@@ -98,47 +98,51 @@
             margin-bottom: 10px;
             font-size: 1rem;
         }
-        .theory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
+        /* Bloques de Teoría */
+        .change-block {
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
         }
-        .theory-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--blue-700);
-            transition: transform 0.2s;
+        .change-block.natural {
+            background: #e6f2ff; 
+            border: 2px solid var(--blue-600);
         }
-        .theory-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        .change-block.artificial {
+            background: #fff3e0; 
+            border: 2px solid var(--orange);
         }
-        .theory-card h3 {
-            color: var(--blue-dark);
-            font-size: 1.1rem;
+        .block-title {
+            font-size: 1.2rem;
+            font-weight: 800;
             margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
-        .theory-card h3 span {
-            color: var(--orange);
-            font-weight: 900;
+        .natural .block-title { color: var(--blue-700); }
+        .artificial .block-title { color: var(--orange-700); }
+        
+        .block-list {
+            list-style: none;
+            padding-left: 5px;
         }
-        .theory-card p {
+        .block-list li {
+            margin-bottom: 8px;
             font-size: 0.95rem;
             color: #444;
+            line-height: 1.4;
         }
-        .theory-card p strong {
-            color: var(--blue-700);
+        .block-list li strong {
+            color: var(--blue-dark);
+            font-weight: 700;
         }
 
         /* Juego: Emparejar Tarjetas (Grid) */
         .match-container {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Dos columnas fijas */
+            grid-template-columns: 1fr 1fr; 
             gap: 20px;
             margin: 20px 0;
             flex: 1;
@@ -151,65 +155,50 @@
             gap: 10px;
         }
 
-        .match-card {
-            background-color: #fff;
-            color: var(--blue-700);
-            border: 2px solid var(--blue-600);
+        /* RESTAURANDO ESTILO ORIGINAL DE TARJETAS */
+        .memory-card {
+            background-color: #3498db; /* Azul original */
+            color: white;
+            border: 3px solid transparent;
             border-radius: 10px;
             padding: 15px;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
             text-align: center;
             min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: bold;
             user-select: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .match-card:hover { 
-            transform: scale(1.02); 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            border-color: var(--orange);
-        }
-        .match-card.selected { 
-            background-color: var(--orange); 
-            border-color: var(--orange-700);
-            transform: scale(1.03);
-            color: white;
-            box-shadow: 0 4px 12px rgba(245, 158, 66, 0.3);
-        }
-        .match-card.matched { 
-            background-color: var(--green); 
-            border-color: #27ae60;
-            color: white; 
-            cursor: default;
-            opacity: 0.9;
-        }
-        .match-card.flash-error { 
-            animation: shake 0.3s ease-in-out; 
-            background-color: var(--red);
-            border-color: var(--red);
-            color: white;
+        .memory-card:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        
+        /* Amarillo al seleccionar (Original) */
+        .memory-card.selected { background-color: #f1c40f; transform: scale(1.05); color: white; }
+        
+        /* Verde al acertar (Original) */
+        .memory-card.matched { background-color: #27ae60; color: white; cursor: default; }
+        
+        /* Rojo y shake al error */
+        .memory-card.flash-error { animation: shakeRed 0.3s ease-in-out; }
+
+        @keyframes shakeRed {
+            0% { background-color: #3498db; transform: translateX(0); }
+            20% { background-color: #e74c3c; transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            100% { background-color: #3498db; transform: translateX(0); }
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-8px); }
-            80% { transform: translateX(8px); }
-        }
-
-        /* Responsive para match container */
         @media (max-width: 600px) {
             .match-container {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-            .match-card {
+            .memory-card {
                 font-size: 0.9rem;
                 padding: 12px;
             }
@@ -276,9 +265,9 @@
             <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Kids learning">
             
             <div class="hall-of-fame" id="hallOfFame">
-                <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
-                <table class="hall-of-fame-table">
-                    <thead>
+              <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
+              <table class="hall-of-fame-table">
+                  <thead>
                         <tr>
                             <th>Posición</th>
                             <th>Nombre</th>
@@ -286,10 +275,8 @@
                             <th>Tiempo</th>
                         </tr>
                     </thead>
-                    <tbody id="hofTableBody">
-                        <tr><td colspan="4" class="hall-of-fame-loading">Cargando datos...</td></tr>
-                    </tbody>
-                </table>
+                    <tbody id="hofTableBody"><tr><td colspan="4" class="hall-of-fame-loading">Cargando datos...</td></tr></tbody>
+              </table>
             </div>
         </div>
     </section>
@@ -300,37 +287,26 @@
             <h1>La materia y sus propiedades específicas</h1>
         </header>
         <div class="theory-content">
-            <div class="theory-intro">Para fabricar objetos, usamos distintos materiales dependiendo de sus propiedades; por ejemplo:</div>
+            <div class="theory-main-title">Propiedades específicas de los materiales</div>
+            <p class="theory-intro">Para fabricar objetos, usamos distintos materiales dependiendo de sus propiedades; por ejemplo:</p>
             
-            <div class="theory-grid">
-                <div class="theory-card">
-                    <h3><span>Resistencia</span></h3>
-                    <p>Si es difícil de romper: hormigón, roca, acero…</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Plasticidad</span></h3>
-                    <p>Si al deformarlo, mantiene la forma nueva: plastilina, arcilla…</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Elasticidad</span></h3>
-                    <p>Si al deformarlo, recupera su forma anterior: elástico, goma…</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Solubilidad</span></h3>
-                    <p>Si se disuelve en el agua: azúcar, sal…</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Conductividad</span></h3>
-                    <p>Si deja pasar la electricidad (<strong>conductores</strong>: cobre, hierro...) o si no la deja pasar (<strong>aislantes</strong>: goma, plástico, madera).</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Comportamiento ante la luz</span></h3>
-                    <p>Si deja pasar la luz (<strong>transparente</strong>: cristal), si no deja pasar la luz (<strong>opaco</strong>: madera) o si deja pasar parte de la luz (<strong>traslúcido</strong>: mampara de baño).</p>
-                </div>
-                <div class="theory-card">
-                    <h3><span>Flotabilidad</span></h3>
-                    <p>Si flota en un líquido: madera, corcho…</p>
-                </div>
+            <div class="change-block natural">
+                <div class="block-title">Propiedades Físicas</div>
+                <ul class="block-list">
+                    <li><strong>Resistencia:</strong> si es difícil de romper: hormigón, roca, acero…</li>
+                    <li><strong>Plasticidad:</strong> si al deformarlo, mantiene la forma nueva: plastilina, arcilla…</li>
+                    <li><strong>Elasticidad:</strong> si al deformarlo, recupera su forma anterior: elástico, goma…</li>
+                    <li><strong>Solubilidad:</strong> si se disuelve en el agua: azúcar, sal…</li>
+                    <li><strong>Flotabilidad:</strong> si flota en un líquido: madera, corcho…</li>
+                </ul>
+            </div>
+
+            <div class="change-block artificial">
+                <div class="block-title">Interacción con Energía y Luz</div>
+                <ul class="block-list">
+                    <li><strong>Conductividad:</strong> si deja pasar la electricidad (conductores: cobre, hierro...) o si no la deja pasar (aislantes: goma, plástico, madera).</li>
+                    <li><strong>Comportamiento ante la luz:</strong> si deja pasar la luz (transparente: cristal), si no deja pasar la luz (opaco: madera) o si deja pasar parte de la luz (traslúcido: mampara de baño).</li>
+                </ul>
             </div>
 
             <div class="play-btn-container" style="text-align: center; margin-top: 20px;">
@@ -620,7 +596,7 @@
 
         // Click Handler
         container.onclick = (e) => {
-            const target = e.target.closest('.match-card');
+            const target = e.target.closest('.memory-card');
             if (!target || target.classList.contains('matched')) return;
 
             // First click
@@ -669,7 +645,7 @@
 
     function createCard(data, type) {
         const card = document.createElement('div');
-        card.className = 'match-card';
+        card.className = 'memory-card';
         card.textContent = data.text;
         card.dataset.pairId = data.pairId;
         card.dataset.type = type;
